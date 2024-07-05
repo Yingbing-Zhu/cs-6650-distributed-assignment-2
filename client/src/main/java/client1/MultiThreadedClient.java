@@ -31,6 +31,7 @@ public class MultiThreadedClient {
 
         long startTime = System.currentTimeMillis();
 
+        //  ----------  PHASE 1 - warm up with 32 threads ------------------
         // Start initial batch of threads for warm up
         for (int i = 0; i < NUM_THREADS_INITIAL; i++) {
             ApiClient apiClient = new ApiClient();
@@ -39,6 +40,7 @@ public class MultiThreadedClient {
                     successfulRequests, MAX_RETRIES));
         }
 
+        //  ----------  PHASE 2 - submit additional 200 threads  ------------------
         int remaining = 168000;
         int requestsPerThread = remaining / additionalThreads;
         int leftOverRequests = remaining % additionalThreads;
@@ -52,6 +54,8 @@ public class MultiThreadedClient {
             executorService.submit(new PostTask(eventQueue, batchSize, apiClient, newLatch,
                     successfulRequests, MAX_RETRIES));
         }
+
+        // wait for all threads to finish
         oldLatch.await(); // wait for the first batch to finish
         newLatch.await(); // wait for new batch to finish
 

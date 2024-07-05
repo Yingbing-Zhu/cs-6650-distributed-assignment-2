@@ -8,9 +8,9 @@ import java.util.concurrent.TimeoutException;
 
 public class Consumer {
     private final static String QUEUE_NAME = "skier_post_queue";
-    private static final String SERVER = "54.185.16.128"; // broker url
-    // private static final String SERVER = "localhost";
-    private final static Integer NUM_THREADS = 100; // 50: 3525; 150: 3320;
+    private static final String SERVER = "c"; // broker url
+    // private static final String SERVER = "localhost"; // local test
+    private final static Integer NUM_THREADS = 50; // 50; 100; 150
     private static Gson gson = new Gson();
     private static final ConcurrentHashMap<String, JsonObject> skierLiftRides = new ConcurrentHashMap<>();
 

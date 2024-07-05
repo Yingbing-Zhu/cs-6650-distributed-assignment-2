@@ -19,8 +19,8 @@ import java.util.concurrent.TimeoutException;
 
 public class SkierServlet extends HttpServlet {
     private static final String QUEUE_NAME = "skier_post_queue";
-    private static final String SERVER = "54.185.16.128"; // broker url
-    // private static final String SERVER = "127.0.0.1";
+    private static final String SERVER = "54.191.42.165"; // broker url
+    // private static final String SERVER = "127.0.0.1"; // local test
     private GenericObjectPool<Channel> channelPool;
     private Gson gson = new Gson();
     // Create a response message

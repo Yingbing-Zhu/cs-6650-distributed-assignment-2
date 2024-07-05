@@ -24,8 +24,8 @@ public class MultiThreadedClientWithLog {
     private static final int MAX_RETRIES = 5;
     // servlet
     // private static final String BASE_URL = "http://localhost:8080/SkiResortAPIService_war/";
-    // private static final String BASE_URL = "http://18.237.231.24:8080/SkiResortAPIService-1.0-SNAPSHOT/"; // ec2 tomcat servlet1 url
-    private static final String BASE_URL = "http://my-alb-2005179444.us-west-2.elb.amazonaws.com:8080/SkiResortAPIService-1.0-SNAPSHOT/"; // ec2 load balancer DNS name
+    // private static final String BASE_URL = "http://35.91.145.61:8080/SkiResortAPIService-1.0-SNAPSHOT/"; // ec2 tomcat servlet1 url
+    private static final String BASE_URL = "http://alb-1840563518.us-west-2.elb.amazonaws.com:8080/SkiResortAPIService-1.0-SNAPSHOT/"; // ec2 load balancer DNS name
     // springboot
     // private static final String BASE_URL = "http://34.221.187.81:8080/cs-6650-distributed-ski-resort-server-springboot-1.0-SNAPSHOT";
     private static final String logPath = "logs/logfile.csv";
@@ -47,7 +47,7 @@ public class MultiThreadedClientWithLog {
         CountDownLatch oldLatch = new CountDownLatch(NUM_THREADS_INITIAL);
 
         long startTime = System.currentTimeMillis();
-
+        //  ----------  PHASE 1 - warm up with 32 threads ------------------
         // Start initial batch of threads
         for (int i = 0; i < NUM_THREADS_INITIAL; i++) {
             ApiClient apiClient = new ApiClient();
@@ -56,6 +56,7 @@ public class MultiThreadedClientWithLog {
                     successfulRequests, MAX_RETRIES, logQueue), null);
         }
 
+        //  ----------  PHASE 2 - submit additional 200 threads  ------------------
         // Calculate request per thread based on additional threads submitted
         int remainingRequests = 168000;
         int requestsPerThread = remainingRequests / additionalThreads;
@@ -70,11 +71,12 @@ public class MultiThreadedClientWithLog {
             executorService.submit(new PostTaskWithLog(eventQueue, batchSize, apiClient, newLatch,
                     successfulRequests, MAX_RETRIES, logQueue), null);
         }
-        oldLatch.await(); // wait for the first batch to finish
+
+        // wait for all threads to finish
+        oldLatch.await();
         newLatch.await();
 
         executorService.shutdown();
-
 
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
