@@ -8,7 +8,7 @@ import java.util.concurrent.TimeoutException;
 
 public class Consumer {
     private final static String QUEUE_NAME = "skier_post_queue";
-    private static final String SERVER = "c"; // broker url
+    private static final String SERVER = "54.191.42.165"; // broker url
     // private static final String SERVER = "localhost"; // local test
     private final static Integer NUM_THREADS = 50; // 50; 100; 150
     private static Gson gson = new Gson();
